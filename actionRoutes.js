@@ -30,4 +30,24 @@ router.post('/actions/:project_id', (req, res) => {
   }
 });
 
+router.put('/actions/:id', (req, res) => {
+  const { id } = req.params;
+  const { description, notes, completed } = req.body;
+
+  if(!description || !notes) {
+    res.status(400).json({errorMessage: 'Please provide a description and additional notes for the action'});
+  } else {
+    db.update(id, { description, notes, completed})
+      .then(actions => {
+        if(actions){
+          res.status(200).json(actions);
+        }else{
+          res.status(404).json(null)
+        }
+      }).catch(err => {
+        res.status(500).json({error: 'The post information could not be modified.'})
+      });
+  }
+});
+
 module.exports = router;
