@@ -14,4 +14,20 @@ router.get('/actions', (req, res) => {
     });
 });
 
+router.post('/actions/:project_id', (req, res) => {
+  const { project_id } = req.params;
+  const { description, notes, completed } = req.body;
+
+  if(!description || !notes){
+    res.status(400).json({errorMessage: 'Please provide a description and additional notes for the action'});
+  } else {
+    db.insert({ project_id, description, notes, completed})
+      .then(actions => {
+        res.status(201).json(actions);
+      }).catch(err => {
+        res.status(500).json({error: 'There was an error while saving to the database.'});
+      });
+  }
+});
+
 module.exports = router;
