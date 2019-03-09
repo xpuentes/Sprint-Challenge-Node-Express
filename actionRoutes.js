@@ -50,4 +50,19 @@ router.put('/actions/:id', (req, res) => {
   }
 });
 
+router.delete('/actions/:id', (req, res) => {
+  const { id } = req.params;
+
+  db.remove(id)
+    .then(actions =>{
+      if(actions){
+        res.json(actions);
+      }else{
+        res.status(404).json({message: 'The action with the specified ID does not exist.'})
+      }
+    }).catch(err => {
+      res.status(500).json({error: 'The action could not be removed'})
+    });
+});
+
 module.exports = router;
